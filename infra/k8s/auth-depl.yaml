@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployement
+kind: Deployment
 metadata:
   name: auth-depl
 spec:

@@ -5,10 +5,12 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  local:
-    push: false
+  # local:
+  #   push: false
+  googleCloudBuild:
+    projectId: triple-circle-321909
   artifacts:
-    - image: omekrit/auth
+    - image: gcr.io/triple-circle-321909/auth
       context: auth
       docker:
         dockerfile: Dockerfile

@@ -2,6 +2,11 @@
 
 applying microservice concepts into building a ticket selling web app
 
+### Prerequisite
+
+- **Package Manager**: npm
+- **Devops**: docker, kubernetes, skaffold
+
 ### Services
 
 - **Auth**: Everything related to user accessing (registrating and authenticating) into the system.

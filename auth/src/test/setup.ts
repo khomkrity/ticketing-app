@@ -2,12 +2,12 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { app } from '../app';
 
-let mongo: any;
+let mongo: MongoMemoryServer;
 beforeAll(async () => {
-  mongo = new MongoMemoryServer();
-  const mongoUri = await mongo.getUri();
+  mongo = await MongoMemoryServer.create();
+  const uri = mongo.getUri();
 
-  await mongoose.connect(mongoUri, {
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

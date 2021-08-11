@@ -1,9 +1,12 @@
 import request from 'supertest';
 import { app } from '../../app';
+import { endPoints } from './end-points';
+
+const { signup } = endPoints;
 
 it('returns a 201 status code on successful sign-up', async () => {
   await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       email: 'test@test.com',
       password: 'password',
@@ -13,7 +16,7 @@ it('returns a 201 status code on successful sign-up', async () => {
 
 it('returns a 400 status code with an invalid email input', async () => {
   await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       email: 'test',
       password: 'password',
@@ -23,7 +26,7 @@ it('returns a 400 status code with an invalid email input', async () => {
 
 it('returns a 400 status code with an invalid password input', async () => {
   await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       email: 'test@test.com',
       password: 'p',
@@ -33,14 +36,14 @@ it('returns a 400 status code with an invalid password input', async () => {
 
 it('returns a 400 status code with an empty input', async () => {
   await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       email: 'test@test.com',
     })
     .expect(400);
 
   await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       password: 'password',
     })
@@ -49,7 +52,7 @@ it('returns a 400 status code with an empty input', async () => {
 
 it('disallows duplicate emails', async () => {
   await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       email: 'test@test.com',
       password: 'password',
@@ -57,7 +60,7 @@ it('disallows duplicate emails', async () => {
     .expect(201);
 
   await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       email: 'test@test.com',
       password: 'password',
@@ -67,7 +70,7 @@ it('disallows duplicate emails', async () => {
 
 it('sets a cookie after successful sign-up', async () => {
   const response = await request(app)
-    .post('/api/users/signup')
+    .post(signup)
     .send({
       email: 'test@test.com',
       password: 'password',

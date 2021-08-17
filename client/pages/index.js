@@ -6,7 +6,7 @@ const LandingPage = ({ currentUser }) => {
 };
 
 // render component with data during server-side rendering process
-LandingPage.getInitialProps = async () => {
+LandingPage.getInitialProps = async ({ req }) => {
   // check the phase that this method is executed
   if (typeof window === 'undefined') {
     // server rendering
@@ -16,9 +16,7 @@ LandingPage.getInitialProps = async () => {
       .get(
         'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
         {
-          headers: {
-            Host: 'ticketing.dev',
-          },
+          headers: req.headers,
         }
       )
       .catch(err => {

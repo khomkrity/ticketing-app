@@ -7,7 +7,7 @@ const LandingPage = ({ currentUser }) => {
 
 // render component with data during server-side rendering process
 LandingPage.getInitialProps = async context => {
-  const { data } = await buildClient(context).get('/api/uers/currentuser');
+  const { data } = await buildClient(context).get('/api/users/currentuser');
   return data;
 };
 

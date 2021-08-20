@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2alpha3
+apiVersion: skaffold/v2beta21
 kind: Config
 deploy:
   kubectl:
@@ -12,6 +12,14 @@ build:
   artifacts:
     - image: gcr.io/triple-circle-321909/auth
       context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: gcr.io/triple-circle-321909/tickets
+      context: tickets
       docker:
         dockerfile: Dockerfile
       sync:

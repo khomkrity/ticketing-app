@@ -37,7 +37,7 @@ afterAll(async () => {
 global.signin = () => {
   // build a jwt payload.
   const payload = {
-    id: '1234',
+    id: new mongoose.Types.ObjectId().toHexString(),
     email: 'test@email.com',
   };
 

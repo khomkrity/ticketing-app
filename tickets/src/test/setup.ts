@@ -8,6 +8,9 @@ declare global {
   var signin: () => string[];
 }
 
+// mock nats client
+jest.mock('../nats-wrapper');
+
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
   process.env.JWT_KEY = 'asf';

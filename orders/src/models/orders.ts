@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 import { OrderStatus } from '@omekrit-ticketing/common';
 import { TicketDoc } from './ticket';
 
+// For convenience, make import order status comes from this file (instead of common module)
+export { OrderStatus };
+
 interface OrderAttrs {
   userId: string;
   status: OrderStatus;

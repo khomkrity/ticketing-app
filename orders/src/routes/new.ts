@@ -1,9 +1,18 @@
 import express, { Request, Response } from 'express';
-import { requireAuth, validateRequest } from '@omekrit-ticketing/common';
+import {
+  BadRequestError,
+  NotFoundError,
+  requireAuth,
+  validateRequest,
+} from '@omekrit-ticketing/common';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
+import { Ticket } from '../models/ticket';
+import { Order, OrderStatus } from '../models/orders';
 
 const router = express.Router();
+
+const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
 router.post(
   '/api/orders',
@@ -17,7 +26,37 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    res.send({});
+    const { ticketId } = req.body;
+
+    // find the ticket the user is trying to order
+    const ticket = await Ticket.findById(ticketId);
+
+    if (!ticket) {
+      throw new NotFoundError();
+    }
+
+    // make sure that the ticket is not already reserved
+    const isReserved = await ticket.isReserved();
+    // the ticket is already reserved
+    if (isReserved) {
+      throw new BadRequestError('Ticket is already reserved');
+    }
+
+    // calculate an expiration date of the order (default at 15 min)
+    const expiration = new Date();
+    expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
+
+    // build the order and save it into the database
+    const order = Order.build({
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket,
+    });
+    await order.save();
+
+    // publish an event order:created
+    res.status(201).send(order);
   }
 );
 

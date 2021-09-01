@@ -23,6 +23,12 @@ it('implements optimistic concurrency control', async () => {
   await firstInstance!.save();
 
   // save the second fetched ticket
-  await secondInstance!.save();
   // expect to see versioning error
+
+  try {
+    await secondInstance!.save();
+  } catch (err) {
+    expect(err.VersionError).not.toBeNull();
+    return;
+  }
 });

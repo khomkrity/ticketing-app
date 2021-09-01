@@ -23,7 +23,7 @@ interface OrderModel extends mongoose.Model<OrderDoc> {
   build(attrs: OrderAttrs): OrderDoc;
 }
 
-const orderSchema = new mongoose.Schema<OrderDoc, OrderModel>(
+const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: String,

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Order, OrderStatus } from './orders';
 
 interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
 }
@@ -40,7 +41,11 @@ const ticketSchema = new mongoose.Schema<TicketDoc, TicketModel>(
 );
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id,
+    title: attrs.price,
+    price: attrs.price,
+  });
 };
 
 // run query to look at all orders

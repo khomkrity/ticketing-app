@@ -58,3 +58,19 @@ it('acknowledges the message', async () => {
 
   expect(msg.ack).toHaveBeenCalled();
 });
+
+it('does not acknowledge the event with a wrong version of order', async () => {
+  const { listener, data, msg } = await setupMockTicketEvent();
+
+  // skip the version
+  data.version = 999;
+
+  // expect the listener to not acknowledge the event
+  try {
+    await listener.onMessage(data, msg);
+  } catch (err) {
+    return;
+  }
+
+  expect(msg.ack).not.toHaveBeenCalled();
+});

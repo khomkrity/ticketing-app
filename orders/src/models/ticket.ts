@@ -45,7 +45,7 @@ const ticketSchema = new mongoose.Schema(
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket({
     _id: attrs.id,
-    title: attrs.price,
+    title: attrs.title,
     price: attrs.price,
   });
 };

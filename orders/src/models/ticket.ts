@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { Order, OrderStatus } from './orders';
 
 interface TicketAttrs {
@@ -10,6 +11,7 @@ interface TicketAttrs {
 export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
+  version: number;
   isReserved(): Promise<boolean>;
 }
 
@@ -17,7 +19,7 @@ interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
 }
 
-const ticketSchema = new mongoose.Schema<TicketDoc, TicketModel>(
+const ticketSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -34,7 +36,6 @@ const ticketSchema = new mongoose.Schema<TicketDoc, TicketModel>(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.__v;
       },
     },
   }
@@ -48,11 +49,14 @@ ticketSchema.statics.build = (attrs: TicketAttrs) => {
   });
 };
 
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin, { strategy: 'version' });
+
 // run query to look at all orders
 // find an order where the ticket is the ticket we just found and the orders status is not cancelled
 ticketSchema.methods.isReserved = async function () {
   const existingOrder = await Order.findOne({
-    ticket: this,
+    ticket: this as any,
     status: {
       $in: [OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Completed],
     },

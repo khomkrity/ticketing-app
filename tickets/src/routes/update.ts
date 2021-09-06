@@ -5,6 +5,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from '@omekrit-ticketing/common';
 import { Ticket } from '../models/tickets';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -25,6 +26,11 @@ router.put(
 
     if (!ticket) {
       throw new NotFoundError();
+    }
+
+    // already reserved ticket, no edit is allowed
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
     }
 
     if (ticket.userId !== req.currentUser!.id) {

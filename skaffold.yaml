@@ -42,6 +42,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: gcr.io/triple-circle-321909/payments
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
     - image: gcr.io/triple-circle-321909/client
       context: client
       docker:

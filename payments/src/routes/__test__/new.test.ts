@@ -3,6 +3,9 @@ import { app } from '../../app';
 import { Order } from '../../models/order';
 import { OrderStatus } from '@omekrit-ticketing/common';
 import mongoose from 'mongoose';
+import { stripe } from '../../stripe';
+
+jest.mock('../../stripe');
 
 it('returns a 404 status code when puchasing an order that does not exist', async () => {
   await request(app)
@@ -60,4 +63,34 @@ it('returns a 400 status code when purchasing a cancelled order', async () => {
       token: 'random',
     })
     .expect(400);
+});
+
+it('returns a 201 status code with valid inputs after successfully purchasing an order', async () => {
+  // create an order with a random user id that has a 'cancelled' status
+  const userId = mongoose.Types.ObjectId().toHexString();
+  const order = Order.build({
+    id: mongoose.Types.ObjectId().toHexString(),
+    userId,
+    price: 20,
+    version: 0,
+    status: OrderStatus.Created,
+  });
+  await order.save();
+
+  // successfully made a purchase to the order
+  await request(app)
+    .post('/api/payments')
+    .set('Cookie', global.signin(userId))
+    .send({
+      token: 'tok_visa',
+      orderId: order.id,
+    })
+    .expect(201);
+  expect(stripe.charges.create).toHaveBeenCalled();
+
+  // expect stripe charge options to be valid
+  const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
+  expect(chargeOptions.source).toEqual('tok_visa');
+  expect(chargeOptions.amount).toEqual(20 * 100);
+  expect(chargeOptions.currency).toEqual('usd');
 });

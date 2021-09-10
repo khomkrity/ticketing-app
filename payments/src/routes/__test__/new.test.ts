@@ -68,10 +68,11 @@ it('returns a 400 status code when purchasing a cancelled order', async () => {
 it('returns a 201 status code with valid inputs after successfully purchasing an order', async () => {
   // create an order with a random user id that has a 'cancelled' status
   const userId = mongoose.Types.ObjectId().toHexString();
+  const price = Math.floor(Math.random() * 100);
   const order = Order.build({
     id: mongoose.Types.ObjectId().toHexString(),
     userId,
-    price: 20,
+    price,
     version: 0,
     status: OrderStatus.Created,
   });
@@ -91,6 +92,6 @@ it('returns a 201 status code with valid inputs after successfully purchasing an
   // expect stripe charge options to be valid
   const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
   expect(chargeOptions.source).toEqual('tok_visa');
-  expect(chargeOptions.amount).toEqual(20 * 100);
+  expect(chargeOptions.amount).toEqual(price * 100);
   expect(chargeOptions.currency).toEqual('usd');
 });

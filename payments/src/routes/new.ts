@@ -5,7 +5,10 @@ import {
   validateRequest,
   BadRequestError,
   NotFoundError,
+  NotAuthorizedError,
+  OrderStatus,
 } from '@omekrit-ticketing/common';
+import { stripe } from '../stripe';
 import { Order } from '../models/order';
 
 const router = express.Router();
@@ -17,7 +20,33 @@ router.post(
     body('token').not().isEmpty().withMessage('token must be provided'),
     body('orderId').not().isEmpty().withMessage('order id must be provided'),
   ],
-  (req: Request, res: Response) => {
+  validateRequest,
+  async (req: Request, res: Response) => {
+    const { token, orderId } = req.body;
+
+    const order = await Order.findById(orderId);
+
+    const all = await Order.find();
+    console.log(all);
+
+    if (!order) {
+      throw new NotFoundError();
+    }
+
+    if (order.userId !== req.currentUser!.id) {
+      throw new NotAuthorizedError();
+    }
+
+    if (order.status === OrderStatus.Cancelled) {
+      throw new BadRequestError('Invalid order status');
+    }
+
+    await stripe.charges.create({
+      currency: 'usd',
+      amount: order.price * 100,
+      source: token,
+    });
+
     res.send({ success: true });
   }
 );

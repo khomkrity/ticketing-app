@@ -26,9 +26,6 @@ router.post(
 
     const order = await Order.findById(orderId);
 
-    const all = await Order.find();
-    console.log(all);
-
     if (!order) {
       throw new NotFoundError();
     }
@@ -47,7 +44,7 @@ router.post(
       source: token,
     });
 
-    res.send({ success: true });
+    res.status(201).send({ success: true });
   }
 );
 

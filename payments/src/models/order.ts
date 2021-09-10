@@ -48,12 +48,10 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-orderSchema.set('versionKey', 'version');
-orderSchema.plugin(updateIfCurrentPlugin, { strategy: 'version' });
-
 orderSchema.statics.build = (attrs: OrderAttrs) => {
   return new Order({
     _id: attrs.id,
+    userId: attrs.userId,
     version: attrs.version,
     price: attrs.price,
     status: attrs.status,
@@ -66,6 +64,9 @@ orderSchema.statics.findByEvent = (event: { id: string; version: number }) => {
     version: event.version - 1,
   });
 };
+
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin, { strategy: 'version' });
 
 const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema);
 

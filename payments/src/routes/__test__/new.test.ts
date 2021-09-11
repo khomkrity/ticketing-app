@@ -1,11 +1,10 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Order } from '../../models/order';
+import { Payment } from '../../models/payment';
 import { OrderStatus } from '@omekrit-ticketing/common';
 import mongoose from 'mongoose';
 import { stripe } from '../../stripe';
-
-jest.mock('../../stripe');
 
 it('returns a 404 status code when puchasing an order that does not exist', async () => {
   await request(app)
@@ -87,11 +86,22 @@ it('returns a 201 status code with valid inputs after successfully purchasing an
       orderId: order.id,
     })
     .expect(201);
-  expect(stripe.charges.create).toHaveBeenCalled();
 
   // expect stripe charge options to be valid
-  const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
-  expect(chargeOptions.source).toEqual('tok_visa');
-  expect(chargeOptions.amount).toEqual(price * 100);
-  expect(chargeOptions.currency).toEqual('usd');
+  const stripeCharges = await stripe.charges.list({ limit: 50 });
+  const stripeCharge = stripeCharges.data.find(charge => {
+    return charge.amount === price * 100;
+  });
+
+  expect(stripeCharge).toBeDefined();
+  expect(stripeCharge!.currency).toEqual('usd');
+
+  // find a saved payment record
+  const payment = await Payment.findOne({
+    orderId: order.id,
+    stripeId: stripeCharge!.id,
+  });
+
+  // expect a record to be found
+  expect(payment).not.toBeNull();
 });

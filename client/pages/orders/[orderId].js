@@ -1,7 +1,18 @@
 import { useEffect, useState } from 'react';
+import Router from 'next/router';
+import useRequest from '../../hooks/use-request';
+import StripeCheckout from 'react-stripe-checkout';
 
-const OrderShow = ({ order }) => {
+const OrderShow = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState(0);
+  const { doRequest, errors } = useRequest({
+    url: '/api/payments',
+    method: 'post',
+    body: {
+      orderId: order.id,
+    },
+    onSuccess: () => Router.push('/orders'),
+  });
 
   // call it once the component is rendered to calculate expiration
   useEffect(() => {
@@ -22,7 +33,18 @@ const OrderShow = ({ order }) => {
     return <div>Order Expired</div>;
   }
 
-  return <div>Time left to pay: {timeLeft} seconds</div>;
+  return (
+    <div>
+      Time left to pay: {timeLeft} seconds
+      <StripeCheckout
+        token={({ id }) => doRequest({ token: id })}
+        stripeKey='pk_test_51JY4L0HLzMBLHCF1a77TNTQKhlbb2xL3k7h1tqOswYzQeepwmfJynZwc45weTYbS3pqiCYGid7CQdJjCYQD3DXiQ00qc1QoEwS'
+        amount={order.ticket.price * 100}
+        email={currentUser.email}
+      />
+      {errors}
+    </div>
+  );
 };
 
 OrderShow.getInitialProps = async (context, client) => {

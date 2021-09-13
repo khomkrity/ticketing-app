@@ -38,7 +38,7 @@ _Another Side Note_: _Since all of the services are independent, having its own 
 
 - The big challenge in microservice is **data** since each service has its own database.
 - Typescript makes it a lot easier to capture data properties and bugs inside the system.
-- Testing is a must for this type of application and you need to make sure that the components inside each service is loosely coupled so that you can create mocks and test on a single unit/component.
+- Testing is a must for this type of application and you need to make sure that the components inside each service are loosely coupled so that you can create mocks and test on a single unit/component.
 - Async communication focuses on communicating changes using events sent to an event bus.
 - Async communication encourages each service to be 100% self-sufficient which will be relatively easy to handle temporary downtime or new service creation.
 - Data replication is needed for microservice.

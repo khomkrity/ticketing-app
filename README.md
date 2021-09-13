@@ -21,7 +21,7 @@ This project is a part of the udemy course provided by Stephen Grider.
 
 _Side Note_: _Each service is contained inside a docker image which will be deployed inside a kubernetes pod (one container per pod) which is exposed by a Cluster IP service._
 
-_Another Side Note_: \_Since all the services are independent, having its own system and database, that's where message queue comes into play to asynchronously publish and listen on events (data) throughout all services.
+_Another Side Note_: _Since all the services are independent, having its own system and database, that's where message queue comes into play to asynchronously publish and listen on events (data) throughout all services._
 
 ## Tech Stack :toolbox:
 

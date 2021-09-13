@@ -6,7 +6,7 @@ This project is a part of the udemy course provided by Stephen Grider.
 ## Goal of this Project :dart:
 
 1. Focus on how to apply microservice concept into building an applcation
-2. Each part of features or use cases inside of the app can categorized and divided into services having its own independent system (i.e. programming language, business logic, database).
+2. Each part of features or use cases inside of the app can be categorized and divided into services having its own independent system (i.e. programming language, business logic, database).
 3. Get a basic understanding how asynchronous communication works inside the system using a message queue to publish and listen on events (data)
 
 ## System Overview :globe_with_meridians:

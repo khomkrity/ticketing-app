@@ -11,7 +11,7 @@ This project is a part of the udemy course provided by Stephen Grider.
 
 ## System Overview :globe_with_meridians:
 
-> This application provides a simple ticket selling (lots of improvement are needed if intended to use in the real world).
+> This application provides a simple ticket selling system (lots of improvement are needed if intended to use in the real world).
 
 - **Auth**: Everything related to user accessing (registrating and authenticating) into the system.
 - **Ticket**: tickets available to users to reserve and purchase

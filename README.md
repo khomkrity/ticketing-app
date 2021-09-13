@@ -50,4 +50,5 @@ _Another Side Note_: \_Since all the services are independent, having its own sy
 ### Further Improvements :chart_with_upwards_trend:
 
 - Redesign in business logic and database structures inside the system is needed if intended to use as a real world application.
+- To deploy the system, further kubernetes cluster configuration: service, load balancer, host, and github workflow is required.
 - User interface/experience part is currently overlooked (since this app focuses only on the back-end)

@@ -46,6 +46,7 @@ _Another Side Note_: _Since all of the services are independent, having its own 
 - Data replication is needed for microservice.
 - Docker makes it easier to package up services.
 - Kubernetes is a pain to setup, but makes it easier to deploy and scale services.
+- With GitHub Action, I can apply test execution and deployment scripts to be run on push or pull request for the code to be tested and deployed automatically.
 - You can use cloud service provider to leverage the image building and container orchestration process if your local machine has low speed cpu and not a lot of RAM
 - Apart of microservice concept, it's a prerequisite for everyone before jumping into the microservice world to first have a basic understanding of **how to build an app (programming languages, front-end, back-end, frameworks, tools, and other stuff related)**
 

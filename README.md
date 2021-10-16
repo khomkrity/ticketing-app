@@ -42,7 +42,7 @@ _Another Side Note_: _Since all of the services are independent, having its own 
 - Async communication focuses on communicating changes using events sent to an event bus.
 - Async communication encourages each service to be 100% self-sufficient which will be relatively easy to handle temporary downtime or new service creation.
 - Async communication can provide concurrency issues where each service processes an event in an incorrect order which can introduce a big problem to the app.
-- To tackle the concurrency issue, I added versioning strategy inside the database schmea to keep track on the right order of event.
+- To tackle the concurrency issue, I added versioning strategy inside the database schema to keep track on the right order of event.
 - Data replication is needed for microservice.
 - Docker makes it easier to package up services.
 - Kubernetes is a pain to setup, but makes it easier to deploy and scale services.
